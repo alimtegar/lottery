@@ -11,35 +11,25 @@ const Results = () => {
 
     const [activeTabI, setActiveTabI] = useState(0);
 
-    const resultsToExcelData = (_results: Result[]) => {
-        // create the 2D array
-        let _excelData: (string | number)[][] = [];
-        for (let i = 0; i < _results.length; i++) {
-            let item = _results[i].item;
-            let lotteryNumbers = _results[i].lotteryNumbers;
-            if (i === 0) {
-                _excelData.push([item.title]);
-            } else {
-                _excelData[0].push(item.title);
-            }
-            for (let j = 0; j < lotteryNumbers.length; j++) {
-                if (_excelData.length <= j + 1) {
-                    _excelData.push([lotteryNumbers[j]]);
-                } else {
-                    _excelData[j + 1].push(lotteryNumbers[j]);
-                }
-            }
-        }
-
-        // pad the shorter arrays with empty values
-        for (let i = 0; i < _excelData.length; i++) {
-            while (_excelData[i].length < _results.length) {
-                _excelData[i].push('');
-            }
-        }
-
-        return _excelData;
-    }
+    function resultsTo2DArray(results: Result[]) {
+        // Get the maximum number of lottery numbers
+        const maxLength = Math.max(...results.map(result => result.lotteryNumbers.length));
+      
+        // Initialize the 2D array with empty strings
+        const arr = new Array(maxLength + 1).fill('').map(() => new Array(results.length).fill(''));
+      
+        // Set the titles in the first row
+        arr[0] = results.map(result => result.item.title);
+      
+        // Set the lottery numbers in the subsequent rows
+        results.forEach((result, colIndex) => {
+          result.lotteryNumbers.forEach((num, rowIndex) => {
+            arr[rowIndex + 1][colIndex] = num;
+          });
+        });
+      
+        return arr;
+      }
 
     const exportToExcel = (data: (string | number)[][]) => {
         const ws = XLSX.utils.aoa_to_sheet(data);
@@ -76,7 +66,7 @@ const Results = () => {
                 <div className="mt-auto">
                     <a
                         className="btn btn-success w-full"
-                        onClick={() => exportToExcel(resultsToExcelData(results))}
+                        onClick={() => exportToExcel(resultsTo2DArray(results))}
                         download="Undian.xlsx"
                     >
                         EXPORT KE EXCEL
