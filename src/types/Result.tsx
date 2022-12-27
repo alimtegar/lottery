@@ -1,8 +1,8 @@
-import Item from './Item';
+import NumberedItem from './NumberedItem';
 
 type Result = {
-    item: Item,
-    lotteryNumbers: number[],
+    frame: string,
+    numberedItems: NumberedItem[];
 };
 
 export default Result;

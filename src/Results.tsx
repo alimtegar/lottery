@@ -11,25 +11,25 @@ const Results = () => {
 
     const [activeTabI, setActiveTabI] = useState(0);
 
-    function resultsTo2DArray(results: Result[]) {
-        // Get the maximum number of lottery numbers
-        const maxLength = Math.max(...results.map(result => result.lotteryNumbers.length));
+    // function resultsTo2DArray(results: Result[]) {
+    //     // Get the maximum number of lottery numbers
+    //     const maxLength = Math.max(...results.map(result => result.lotteryNumbers.length));
 
-        // Initialize the 2D array with empty strings
-        const arr = new Array(maxLength + 1).fill('').map(() => new Array(results.length).fill(''));
+    //     // Initialize the 2D array with empty strings
+    //     const arr = new Array(maxLength + 1).fill('').map(() => new Array(results.length).fill(''));
 
-        // Set the titles in the first row
-        arr[0] = results.map(result => result.item.title);
+    //     // Set the titles in the first row
+    //     arr[0] = results.map(result => result.item.title);
 
-        // Set the lottery numbers in the subsequent rows
-        results.forEach((result, colIndex) => {
-            result.lotteryNumbers.forEach((num, rowIndex) => {
-                arr[rowIndex + 1][colIndex] = num;
-            });
-        });
+    //     // Set the lottery numbers in the subsequent rows
+    //     results.forEach((result, colIndex) => {
+    //         result.lotteryNumbers.forEach((num, rowIndex) => {
+    //             arr[rowIndex + 1][colIndex] = num;
+    //         });
+    //     });
 
-        return arr;
-    }
+    //     return arr;
+    // }
 
     const exportToExcel = (data: (string | number)[][]) => {
         const ws = XLSX.utils.aoa_to_sheet(data);
@@ -41,29 +41,36 @@ const Results = () => {
     // useEffect(() => drawLotteryNumbers(range, items), []);
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full p-4">
             <div className="flex flex-col h-full">
-                <div className="tabs mb-4">
+                <div className="tabs tabs-boxed mb-4">
                     {results?.length && results.map((result, i) => (
                         <a
-                            className={'tab tab-lifted flex-grow h-12' + (activeTabI === i ? ' tab-active' : '')}
+                            className={'tab flex-grow h-12' + (activeTabI === i ? ' tab-active' : '')}
                             onClick={() => setActiveTabI(i)}
-                            key={result.item.id}
+                            key={result.frame}
                         >
-                            {result.item.title}
+                            Frame {result.frame}
                         </a>
                     ))}
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                    {results?.length && results[activeTabI].lotteryNumbers.map((lotteryNumber) => (
-                        <div className="font-bold text-2xl text-center px-4 py-8 border rounded-lg" key={lotteryNumber}>
-                            {lotteryNumber}
+                <div className="grid grid-cols-4 gap-2 mb-4">
+                    {results?.length && results[activeTabI].numberedItems.map((numberedItem) => numberedItem.lotteryNumbers.map((lotteryNumber) => (
+                        <div className="flex flex-col text-center px-4 py-8 border rounded-lg" key={lotteryNumber}>
+                            <span className="text-xs">
+                                {numberedItem.title}
+                            </span>
+                            <span className="font-bold text-2xl">
+                                {lotteryNumber}
+                            </span>
                         </div>
-                    ))}
+                    )))}
                 </div>
 
-                <div className="mt-auto">
+
+
+                {/* <div className="mt-auto">
                     <a
                         className="btn btn-success w-full"
                         onClick={() => exportToExcel(resultsTo2DArray(results))}
@@ -75,7 +82,7 @@ const Results = () => {
 
                         EXPORT KE EXCEL
                     </a>
-                </div>
+                </div> */}
             </div>
         </div>
     );
