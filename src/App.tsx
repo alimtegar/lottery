@@ -73,7 +73,7 @@ const App = () => {
 		const numberedItems = range ? drawLotteryNumbers(range, items) : [];
 		const results = numberedItemsToResults(numberedItems);
 		
-		navigate('/results', { state: { results: results } });
+		navigate('/results', { state: { range, results } });
 	};
 
 	/*
@@ -96,7 +96,7 @@ const App = () => {
 
 	return (
 		<div className="flex justify-center bg-gray-100 h-screen">
-			<form className="bg-white w-full sm:w-1/2 h-full p-4 shadow-xl">
+			<form className="bg-white w-full sm:w-5/12 p-4 shadow">
 				<div className="flex flex-col h-full">
 					<div className="form-control w-full mb-2">
 						<label className="label">
