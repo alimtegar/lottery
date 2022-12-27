@@ -1,16 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 
 // Types
+import Item from './types/Item';
 import Result from './types/Result';
 
 const Results = () => {
     const location = useLocation();
-    const results: Result[] = location.state?.results;
+    const range: number = location.state?.range;
+    const items: Item[] = location.state?.items;
 
     const [activeTabI, setActiveTabI] = useState(0);
-    // const [excelData, setExcelData] = useState<(string | number)[][]>();
+    const [results, setResults] = useState<Result[]>([]);
+
+    function generateUniqueNumbers(min: number, max: number, count: number): number[] {
+        let numbers = new Set<number>();
+        while (numbers.size < count) {
+            numbers.add(Math.floor(Math.random() * (max - min + 1)) + min);
+        }
+        return Array.from(numbers);
+    }
+
+    const drawLotteryNumbers = (range: number, _items: Item[]) => {
+        const count = _items.reduce((total, item) => total + (item.n ? +item.n : 0), 0);
+        let uniqueNumbers = generateUniqueNumbers(1, range, count);
+
+        const _results: Result[] = _items.map((item) => ({
+            item: item,
+            lotteryNumbers: uniqueNumbers.splice(0, (item.n ? +item.n : 0)),
+        }));
+
+        setResults(_results);
+    }
+
 
     const resultsToExcelData = (_results: Result[]) => {
         // create the 2D array
@@ -49,6 +72,8 @@ const Results = () => {
         XLSX.writeFile(wb, 'Undian.xlsx');
     }
 
+    useEffect(() => drawLotteryNumbers(range, items), []);
+
     return (
         <form className="w-full h-full">
             <div className="flex flex-col h-full">
@@ -64,7 +89,7 @@ const Results = () => {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 mb-4">
                     {results?.length && results[activeTabI].lotteryNumbers.map((lotteryNumber) => (
                         <div className="font-bold text-2xl text-center px-4 py-8 border rounded" key={lotteryNumber}>
                             {lotteryNumber}
@@ -75,7 +100,7 @@ const Results = () => {
                 <div className="mt-auto">
                     <a
                         className="btn btn-success w-full"
-                        onClick={() => exportToExcel(resultsToExcelData(results))} 
+                        onClick={() => exportToExcel(resultsToExcelData(results))}
                         download="Undian.xlsx"
                     >
                         EXPORT KE EXCEL

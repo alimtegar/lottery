@@ -6,8 +6,8 @@ import Item from './types/Item';
 import Result from './types/Result';
 
 const App = () => {
-	const [range, setRange] = useState(100);
-	const [items, setItems] = useState<Item[]>([{ id: Math.random(), title: '', n: 1 }]);
+	const [range, setRange] = useState<number | null>(null);
+	const [items, setItems] = useState<Item[]>([{ id: Math.random(), title: '', n: null }]);
 
 	const handleItemChange = (id: number, e: React.ChangeEvent<HTMLInputElement>) => {
 		const changedItems = items.map((item) => {
@@ -22,51 +22,27 @@ const App = () => {
 
 	const addItem = () => setItems([
 		...items,
-		{ id: Math.random(), title: '', n: 1 },
+		{ id: Math.random(), title: '', n: null },
 	]);
 
 	const removeItem = (id: number) => setItems(items.filter((item) => item.id !== id));
-
-	const generateUniqueNumbers = (min: number, max: number, count: number): number[] => {
-		// create an empty array to store the unique numbers
-		const uniqueNumbers: number[] = [];
-
-		// keep generating random numbers until we have the desired number of unique numbers
-		while (uniqueNumbers.length < count) {
-			// generate a random number within the specified range
-			const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-			// check if the random number is already in the array
-			if (!uniqueNumbers.includes(randomNumber)) {
-				// if it's not, add it to the array
-				uniqueNumbers.push(randomNumber);
-			}
-		}
-
-		// return the array of unique numbers
-		return uniqueNumbers;
-	}
-
-	const drawLotteryNumbers = (range: number, _items: Item[]) => {
-		const count = _items.reduce((total, item) => total + item.n, 0);
-		const uniqueNumbers = generateUniqueNumbers(1, range, count);
-
-		const _results: Result[] = _items.map((item) => ({
-			item: item,
-			lotteryNumbers: uniqueNumbers.splice(0, item.n),
-		}));
-
-		return _results;
-	}
 
 	return (
 		<form className="w-full h-full">
 			<div className="flex flex-col h-full">
 				<div className="form-control w-full mb-2">
 					<label className="label">
-						<span className="label-text font-medium text-xs">Input Max. Undian (0-999)</span>
+						<span className="label-text font-medium text-xs">Input Max. Undian</span>
 					</label>
-					<input type="number" onChange={(e) => setRange(+e.target.value)} value={range} min="1" placeholder="0-999" className="input input-bordered w-full text-xs" />
+					<input
+						type="number"
+						name="range"
+						placeholder="0-999"
+						min="1"
+						className="input input-bordered w-full text-xs"
+						value={range ? +range : ''}
+						onChange={(e) => setRange(+e.target.value)}
+					/>
 				</div>
 				<div className="form-control w-full mb-2">
 					<label className="label">
@@ -75,8 +51,24 @@ const App = () => {
 					<div className="grid grid-cols-6 gap-2">
 						{items.map((item, i) => (
 							<React.Fragment key={item.id}>
-								<input type="text" onChange={(e) => handleItemChange(item.id, e)} value={item.title} name="title" placeholder="Nama Item" className="input input-bordered w-full text-xs col-span-3" />
-								<input type="number" onChange={(e) => handleItemChange(item.id, e)} value={item.n} name="n" min="1" placeholder="0" className="input input-bordered w-full text-xs col-span-2" />
+								<input
+									type="text"
+									name="title"
+									placeholder="Nama Item"
+									className="input input-bordered w-full text-xs col-span-3"
+									value={item.title}
+									onChange={(e) => handleItemChange(item.id, e)}
+								/>
+								<input
+									type="number"
+									name="n"
+									placeholder="Jumlah"
+									min="1"
+									className="input input-bordered w-full text-xs col-span-2"
+									value={item.n ? +item.n : ''}
+									onChange={(e) => handleItemChange(item.id, e)}
+								/>
+
 								{items.length > 1 ? (
 									<button type="button" onClick={() => removeItem(item.id)} className="btn btn-outline btn-error">
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -102,11 +94,20 @@ const App = () => {
 					</button>
 				</div>
 				<div className="form-control w-full mt-auto">
-					<Link to="/results" state={{ results: range && drawLotteryNumbers(+range, items) }}>
-						<button className="btn btn-primary w-full">
+					{(
+						range &&
+						items.every((item) => item.title && item.n && item.n > 0)
+					) ? (
+						<Link to="/results" state={{ range, items }}>
+							<button type="button" className="btn btn-primary w-full">
+								MULAI UNDIAN
+							</button>
+						</Link>
+					) : (
+						<button type="button" className="btn btn-primary w-full" disabled>
 							MULAI UNDIAN
 						</button>
-					</Link>
+					)}
 				</div>
 			</div>
 		</form>

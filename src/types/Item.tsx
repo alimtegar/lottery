@@ -1,7 +1,7 @@
 type Item = {
 	id: number,
 	title: string,
-	n: number,
+	n: number | null,
 };
 
 export default Item;

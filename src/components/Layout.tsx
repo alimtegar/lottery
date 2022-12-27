@@ -3,8 +3,8 @@ type Props = {
 }
 
 const Layout = ({children}: Props) => (
-    <div className="bg-base-200 flex justify-center">
-        <div className="flex flex-col bg-white w-96 min-h-screen p-4 prose">
+    <div className="bg-gray-100 flex justify-center">
+        <div className="flex flex-col bg-white w-full sm:w-96 min-h-screen p-4 shadow-xl">
             {children}
         </div>
     </div>
