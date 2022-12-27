@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // Types
 import Item from './types/Item';
 import Result from './types/Result';
 
 const App = () => {
+	const navigate = useNavigate();
+
 	const [range, setRange] = useState<number | null>(null);
 	const [items, setItems] = useState<Item[]>([{ id: Math.random(), title: '', n: null }]);
 
@@ -26,6 +28,32 @@ const App = () => {
 	]);
 
 	const removeItem = (id: number) => setItems(items.filter((item) => item.id !== id));
+
+	function generateUniqueNumbers(min: number, max: number, count: number): number[] {
+		let numbers = new Set<number>();
+		while (numbers.size < count) {
+			numbers.add(Math.floor(Math.random() * (max - min + 1)) + min);
+		}
+		return Array.from(numbers);
+	}
+
+	const drawLotteryNumbers = (range: number, _items: Item[]) => {
+		const count = _items.reduce((total, item) => total + (item.n ? +item.n : 0), 0);
+		let uniqueNumbers = generateUniqueNumbers(1, range, count);
+
+		const _results: Result[] = _items.map((item) => ({
+			item: item,
+			lotteryNumbers: uniqueNumbers.splice(0, (item.n ? +item.n : 0)),
+		}));
+
+		return _results;
+	}
+
+	const navigateToResults = () => {
+		const results = range ? drawLotteryNumbers(range, items) : [];
+
+		navigate('/results', { state: { results: results } });
+	};
 
 	return (
 		<form className="w-full h-full">
@@ -98,11 +126,9 @@ const App = () => {
 						range &&
 						items.every((item) => item.title && item.n && item.n > 0)
 					) ? (
-						<Link to="/results" state={{ range, items }}>
-							<button type="button" className="btn btn-primary w-full">
-								MULAI UNDIAN
-							</button>
-						</Link>
+						<button type="button" className="btn btn-primary w-full" onClick={navigateToResults}>
+							MULAI UNDIAN
+						</button>
 					) : (
 						<button type="button" className="btn btn-primary w-full" disabled>
 							MULAI UNDIAN

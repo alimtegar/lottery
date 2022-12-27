@@ -1,39 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 
 // Types
-import Item from './types/Item';
 import Result from './types/Result';
 
 const Results = () => {
     const location = useLocation();
-    const range: number = location.state?.range;
-    const items: Item[] = location.state?.items;
+    const results: Result[] = location.state?.results;
 
     const [activeTabI, setActiveTabI] = useState(0);
-    const [results, setResults] = useState<Result[]>([]);
-
-    function generateUniqueNumbers(min: number, max: number, count: number): number[] {
-        let numbers = new Set<number>();
-        while (numbers.size < count) {
-            numbers.add(Math.floor(Math.random() * (max - min + 1)) + min);
-        }
-        return Array.from(numbers);
-    }
-
-    const drawLotteryNumbers = (range: number, _items: Item[]) => {
-        const count = _items.reduce((total, item) => total + (item.n ? +item.n : 0), 0);
-        let uniqueNumbers = generateUniqueNumbers(1, range, count);
-
-        const _results: Result[] = _items.map((item) => ({
-            item: item,
-            lotteryNumbers: uniqueNumbers.splice(0, (item.n ? +item.n : 0)),
-        }));
-
-        setResults(_results);
-    }
-
 
     const resultsToExcelData = (_results: Result[]) => {
         // create the 2D array
@@ -72,7 +48,7 @@ const Results = () => {
         XLSX.writeFile(wb, 'Undian.xlsx');
     }
 
-    useEffect(() => drawLotteryNumbers(range, items), []);
+    // useEffect(() => drawLotteryNumbers(range, items), []);
 
     return (
         <form className="w-full h-full">
