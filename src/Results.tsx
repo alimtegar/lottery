@@ -14,22 +14,22 @@ const Results = () => {
     function resultsTo2DArray(results: Result[]) {
         // Get the maximum number of lottery numbers
         const maxLength = Math.max(...results.map(result => result.lotteryNumbers.length));
-      
+
         // Initialize the 2D array with empty strings
         const arr = new Array(maxLength + 1).fill('').map(() => new Array(results.length).fill(''));
-      
+
         // Set the titles in the first row
         arr[0] = results.map(result => result.item.title);
-      
+
         // Set the lottery numbers in the subsequent rows
         results.forEach((result, colIndex) => {
-          result.lotteryNumbers.forEach((num, rowIndex) => {
-            arr[rowIndex + 1][colIndex] = num;
-          });
+            result.lotteryNumbers.forEach((num, rowIndex) => {
+                arr[rowIndex + 1][colIndex] = num;
+            });
         });
-      
+
         return arr;
-      }
+    }
 
     const exportToExcel = (data: (string | number)[][]) => {
         const ws = XLSX.utils.aoa_to_sheet(data);
@@ -41,12 +41,12 @@ const Results = () => {
     // useEffect(() => drawLotteryNumbers(range, items), []);
 
     return (
-        <form className="w-full h-full">
+        <div className="w-full h-full">
             <div className="flex flex-col h-full">
                 <div className="tabs mb-4">
                     {results?.length && results.map((result, i) => (
                         <a
-                            className={'tab tab-bordered flex-grow h-12' + (activeTabI === i ? ' tab-active' : '')}
+                            className={'tab tab-lifted flex-grow h-12' + (activeTabI === i ? ' tab-active' : '')}
                             onClick={() => setActiveTabI(i)}
                             key={result.item.id}
                         >
@@ -57,7 +57,7 @@ const Results = () => {
 
                 <div className="grid grid-cols-2 gap-2 mb-4">
                     {results?.length && results[activeTabI].lotteryNumbers.map((lotteryNumber) => (
-                        <div className="font-bold text-2xl text-center px-4 py-8 border rounded" key={lotteryNumber}>
+                        <div className="font-bold text-2xl text-center px-4 py-8 border rounded-lg" key={lotteryNumber}>
                             {lotteryNumber}
                         </div>
                     ))}
@@ -69,11 +69,15 @@ const Results = () => {
                         onClick={() => exportToExcel(resultsTo2DArray(results))}
                         download="Undian.xlsx"
                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" />
+                        </svg>
+
                         EXPORT KE EXCEL
                     </a>
                 </div>
             </div>
-        </form>
+        </div>
     );
 };
 

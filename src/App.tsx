@@ -114,6 +114,7 @@ const App = () => {
 						))}
 					</div>
 				</div>
+				
 				<div className="form-control w-full mb-4">
 					<button type="button" className="btn btn-outline btn-primary" onClick={addItem}>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -121,6 +122,7 @@ const App = () => {
 						</svg>
 					</button>
 				</div>
+
 				<div className="form-control w-full mt-auto">
 					{(
 						range &&
