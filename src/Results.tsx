@@ -1,55 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 // Types
-import Item from './types/Item';
-
-type Result = {
-    item: Item,
-    lotteryNumbers: number[],
-}
+import Result from './types/Result';
 
 const Results = () => {
     const location = useLocation();
-    const range: number = location.state?.range;
-    const items: Item[] = location.state?.items;
+    const results: Result[] = location.state?.results;
 
-    const [results, setResults] = useState<Result[]>();
     const [activeTabI, setActiveTabI] = useState(0);
-
-    const generateUniqueNumbers = (min: number, max: number, count: number): number[] => {
-        // create an empty array to store the unique numbers
-        const uniqueNumbers: number[] = [];
-
-        // keep generating random numbers until we have the desired number of unique numbers
-        while (uniqueNumbers.length < count) {
-            // generate a random number within the specified range
-            const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-            // check if the random number is already in the array
-            if (!uniqueNumbers.includes(randomNumber)) {
-                // if it's not, add it to the array
-                uniqueNumbers.push(randomNumber);
-            }
-        }
-
-        // return the array of unique numbers
-        return uniqueNumbers;
-    }
-
-    const drawLotteryNumbers = () => {
-        const count = items.reduce((total, item) => total + item.n, 0);
-        const uniqueNumbers = generateUniqueNumbers(1, range, count);
-
-        const _results: Result[] = items.map((item) => ({
-            item: item,
-            lotteryNumbers: uniqueNumbers.splice(0, item.n),
-        }));
-
-        setResults(_results);
-    }
-
-    useEffect(drawLotteryNumbers, []);
 
     return (
         <>
@@ -72,7 +31,6 @@ const Results = () => {
                     </div>
                 ))}
             </div>
-
         </>
     );
 };
