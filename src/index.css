@@ -10,3 +10,16 @@
       font-family: Poppins, system-ui, sans-serif;
   }
 }
+
+/* The animation code */
+@keyframes flip {
+  from { transform: rotateX(0) }
+  to { transform: rotateX(360deg) }
+}
+
+/* The element to apply the animation to */
+.animation-flip {
+  animation-name: flip;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
