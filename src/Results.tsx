@@ -93,20 +93,20 @@ const Results = () => {
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 mb-4 px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 mb-4 px-4">
                 {results?.length && results[activeTabI].numberedItems.map((numberedItem) => numberedItem.lotteryNumbers.map((lotteryNumber) => (
                     <div className={"bg-white flex flex-col justify-center items-center aspect-square shadow" + (revealedTabs[activeTabI] ? '' : ' animation-flip')}>
                         {revealedTabs[activeTabI] ? (
                             <>
-                                <span className="text-sm -mb-2">
+                                <span className="text-xs -mb-1">
                                     {numberedItem.title}
                                 </span>
-                                <span className="font-bold text-5xl">
+                                <span className="font-bold text-4xl">
                                     {('' + lotteryNumber).padStart(('' + range).length, '0')}
                                 </span>
                             </>
                         ) : (
-                            <span className="font-bold text-5xl">
+                            <span className="font-bold text-4xl">
                                 {''.padStart(('' + range).length, '?')}
                             </span>
                         )}
