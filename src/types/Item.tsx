@@ -3,7 +3,7 @@ type Item = {
 	title: string,
 	frame: string,
 	n: number | null,
-	colorClassName: string,
+	color: string,
 };
 
 export default Item;

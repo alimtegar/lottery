@@ -14,6 +14,15 @@ const Results = () => {
     const [activeTabI, setActiveTabI] = useState(0);
     const [revealedTabs, setRevealedTabs] = useState(Array(results.length).fill(false));
 
+    const BG_COLORS: { [key: string]: string } = {
+		gold: 'bg-amber-500',
+		cyan: 'bg-cyan-300',
+		red: 'bg-red-500',
+		indigo: 'bg-indigo-500',
+		yellow: 'bg-yellow-300',
+		green: 'bg-green-400',
+	};
+
     function resultsTo2DArray(results: Result[]) {
         let _2dArray: string[][] = [];
 
@@ -82,14 +91,14 @@ const Results = () => {
                     ))}
                 </div>
 
-                <a className="btn btn-success btn-sm m-2" onClick={() => exportToExcel(resultsTo2DArray(results))}>
+                <a className="btn btn-info btn-sm m-2" onClick={() => exportToExcel(resultsTo2DArray(results))}>
                     EXPORT KE EXCEL
                 </a>
             </div>
 
             <div className="grid grid-cols-5 gap-2 mb-4 px-4">
                 {results?.length && results[activeTabI].numberedItems.map((numberedItem) => numberedItem.lotteryNumbers.map((lotteryNumber) => (
-                    <div className={`flex flex-col justify-center items-center text-center p-4 text-white rounded-xl shadow bg-${results[activeTabI].colorClassName}`} key={lotteryNumber}>
+                    <div className={"flex flex-col justify-center items-center text-center p-4 text-white rounded-xl shadow " + (results[activeTabI].color ? BG_COLORS[results[activeTabI].color] : 'bg-gray-100')} key={lotteryNumber}>
                         <span className="font-semibold text-xl mb-1">
                             {numberedItem.title}
                         </span>

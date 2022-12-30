@@ -11,34 +11,25 @@ const App = () => {
 	const navigate = useNavigate();
 
 	const [range, setRange] = useState<number | null>(null);
-	const [items, setItems] = useState<Item[]>([{ id: Math.random(), title: '', frame: '', n: null, colorClassName: '' }]);
+	const [items, setItems] = useState<Item[]>([{ id: Math.random(), title: '', frame: '', n: null, color: '' }]);
 
-	const colors: Color[] = [
-		{
-			title: 'Emas',
-			className: 'amber-500',
-		},
-		{
-			title: 'Biru Muda',
-			className: 'cyan-300',
-		},
-		{
-			title: 'Merah',
-			className: 'red-600',
-		},
-		{
-			title: 'Indigo',
-			className: 'indigo-600',
-		},
-		{
-			title: 'Kuning',
-			className: 'yellow-300',
-		},
-		{
-			title: 'Hijau',
-			className: 'green-400',
-		},
-	]
+	const COLORS = ['gold', 'cyan', 'red', 'indigo', 'yellow', 'green'];
+	const BG_COLORS: { [key: string]: string } = {
+		gold: 'bg-amber-500',
+		cyan: 'bg-cyan-300',
+		red: 'bg-red-500',
+		indigo: 'bg-indigo-500',
+		yellow: 'bg-yellow-300',
+		green: 'bg-green-400',
+	};
+	const COLOR_TITLES: { [key: string]: string } = {
+		gold: 'Emas',
+		cyan: 'Biru Muda',
+		red: 'Merah',
+		indigo: 'Indigo',
+		yellow: 'Kuning',
+		green: 'Hijau',
+	};
 
 	const handleItemChange = (id: number, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const changedItems = items.map((item) => {
@@ -53,7 +44,7 @@ const App = () => {
 
 	const addItem = () => setItems([
 		...items,
-		{ id: Math.random(), title: '', frame: '', n: null, colorClassName: '' },
+		{ id: Math.random(), title: '', frame: '', n: null, color: '' },
 	]);
 
 	const removeItem = (id: number) => setItems(items.filter((item) => item.id !== id));
@@ -89,7 +80,7 @@ const App = () => {
 			} else {
 				results.push({
 					frame: numberedItem.frame,
-					colorClassName: numberedItem.colorClassName,
+					color: numberedItem.color,
 					numberedItems: [numberedItem],
 				});
 			}
@@ -128,7 +119,7 @@ const App = () => {
 							<span className="label-text font-medium text-xs">Input Item</span>
 						</label>
 						{items.map((item, i) => (
-							<div className={"grid grid-cols-12 gap-2 p-2 mb-2 rounded-xl " + (item.colorClassName ? 'bg-' + item.colorClassName : 'bg-gray-100')} key={item.id}>
+							<div className={"grid grid-cols-12 gap-2 p-2 mb-2 rounded-xl " + (item.color ? BG_COLORS[item.color] : 'bg-gray-100')} key={item.id}>
 								<input
 									type="text"
 									name="title"
@@ -156,14 +147,14 @@ const App = () => {
 									onChange={(e) => handleItemChange(item.id, e)}
 								/>
 								<select
-									name="colorClassName"
+									name="color"
 									className="select font-medium text-xs w-full col-span-3 sm:col-span-4"
-									value={item.colorClassName ? item.colorClassName : ''}
+									value={item.color ? item.color : ''}
 									onChange={(e) => handleItemChange(item.id, e)}
 								>
 									<option>Pilih Warna</option>
-									{colors.map((color) => (
-										<option value={color.className} key={color.className}>{color.title}</option>
+									{COLORS.map((color) => (
+										<option value={color} key={color}>{COLOR_TITLES[color]}</option>
 									))}
 								</select>
 
@@ -196,7 +187,7 @@ const App = () => {
 					<div className="form-control w-full mt-auto">
 						{(
 							range &&
-							items.every((item) => item.title && item.frame && item.colorClassName && item.n && item.n > 0)
+							items.every((item) => item.title && item.frame && item.color && item.n && item.n > 0)
 						) ? (
 							<button type="button" className="btn btn-primary w-full" onClick={navigateToResults}>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2" style={{ marginTop: -1 }}>

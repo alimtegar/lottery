@@ -2,7 +2,7 @@ import NumberedItem from './NumberedItem';
 
 type Result = {
     frame: string,
-    colorClassName: string,
+    color: string,
     numberedItems: NumberedItem[];
 };
 
