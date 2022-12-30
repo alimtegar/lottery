@@ -59,57 +59,42 @@ const Results = () => {
 
     return (
         <div className="bg-gray-100 w-full min-h-screen">
-            <div className="bg-white flex flex-col sm:flex-row justify-between p-4 mb-4 shadow">
+            <div className="bg-white flex flex-col sm:flex-row justify-between mb-4 shadow">
                 <button
                     type="button"
-                    className="btn btn-error mb-2 sm:mb-0"
+                    className="btn btn-error btn-sm m-2"
                     onClick={() => setRevealedTabs(revealedTabs.map((revealedTab, j) => j === activeTabI || revealedTab))}
                     disabled={revealedTabs[activeTabI]}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2" style={{ marginTop: -1 }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z" />
-                    </svg>
                     STOP
                 </button>
-                <a className="btn btn-success" onClick={() => exportToExcel(resultsTo2DArray(results))}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2" style={{ marginTop: -1 }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" />
-                    </svg>
+
+                <div className="tabs flex-col sm:flex-row">
+                    {results?.length && results.map((result, i) => (
+                        <a
+                            className={'tab tab-bordered flex-grow w-full sm:w-auto h-12 font-medium' + (activeTabI === i ? ' tab-active' : '')}
+                            onClick={() => setActiveTabI(i)}
+                            key={result.frame}
+                        >
+                            Frame {result.frame}
+                        </a>
+                    ))}
+                </div>
+
+                <a className="btn btn-success btn-sm m-2" onClick={() => exportToExcel(resultsTo2DArray(results))}>
                     EXPORT KE EXCEL
                 </a>
             </div>
 
-            {/* <div className="flex flex-col h-full"> */}
-            <div className="tabs flex-col sm:flex-row mb-4 px-4">
-                {results?.length && results.map((result, i) => (
-                    <a
-                        className={'tab tab-bordered flex-grow w-full sm:w-auto h-12' + (activeTabI === i ? ' tab-active' : '')}
-                        onClick={() => setActiveTabI(i)}
-                        key={result.frame}
-                    >
-                        Frame {result.frame}
-                    </a>
-                ))}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-2 mb-4 px-4">
+            <div className="grid grid-cols-5 gap-2 mb-4 px-4">
                 {results?.length && results[activeTabI].numberedItems.map((numberedItem) => numberedItem.lotteryNumbers.map((lotteryNumber) => (
-                    <div className={"bg-white flex flex-col justify-center items-center aspect-square shadow" + (revealedTabs[activeTabI] ? '' : ' animation-flip')}>
-                        {revealedTabs[activeTabI] ? (
-                            <>
-                                <span className="text-xs -mb-1">
-                                    {numberedItem.title}
-                                </span>
-                                <span className="font-bold text-4xl">
-                                    {('' + lotteryNumber).padStart(('' + range).length, '0')}
-                                </span>
-                            </>
-                        ) : (
-                            <span className="font-bold text-4xl">
-                                {''.padStart(('' + range).length, '?')}
-                            </span>
-                        )}
+                    <div className={`flex flex-col justify-center items-center text-center p-4  text-white rounded-xl shadow bg-${results[activeTabI].colorClassName}`}>
+                        <span className="font-semibold text-xl mb-1">
+                            {numberedItem.title}
+                        </span>
+                        <span className="font-bold text-6xl">
+                            {('' + lotteryNumber).padStart(('' + range).length, '0')}
+                        </span>
                     </div>
                 )))}
             </div>

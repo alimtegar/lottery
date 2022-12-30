@@ -128,7 +128,7 @@ const App = () => {
 							<span className="label-text font-medium text-xs">Input Item</span>
 						</label>
 						{items.map((item, i) => (
-							<div className={"grid grid-cols-12 gap-2 p-2 mb-2 " + (item.colorClassName ? 'bg-' + item.colorClassName : 'bg-gray-100')} key={item.id}>
+							<div className={"grid grid-cols-12 gap-2 p-2 mb-2 rounded-xl " + (item.colorClassName ? 'bg-' + item.colorClassName : 'bg-gray-100')} key={item.id}>
 								<input
 									type="text"
 									name="title"
