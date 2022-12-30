@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import * as XLSX from 'xlsx';
+import { RandomReveal } from 'react-random-reveal';
 
 // Types
 import Result from './types/Result';
@@ -88,12 +89,17 @@ const Results = () => {
 
             <div className="grid grid-cols-5 gap-2 mb-4 px-4">
                 {results?.length && results[activeTabI].numberedItems.map((numberedItem) => numberedItem.lotteryNumbers.map((lotteryNumber) => (
-                    <div className={`flex flex-col justify-center items-center text-center p-4  text-white rounded-xl shadow bg-${results[activeTabI].colorClassName}`}>
+                    <div className={`flex flex-col justify-center items-center text-center p-4 text-white rounded-xl shadow bg-${results[activeTabI].colorClassName}`} key={lotteryNumber}>
                         <span className="font-semibold text-xl mb-1">
                             {numberedItem.title}
                         </span>
                         <span className="font-bold text-6xl">
-                            {('' + lotteryNumber).padStart(('' + range).length, '0')}
+                            <RandomReveal
+                                isPlaying
+                                duration={revealedTabs[activeTabI] ? 0 : 3600}
+                                characterSet={Array.from({ length: 10 }, (_, i) => '' + i)}
+                                characters={('' + lotteryNumber).padStart(('' + range).length, '0')}
+                            />
                         </span>
                     </div>
                 )))}
